@@ -12,6 +12,9 @@ install:
   # 2. 克隆 depot_tools
   - git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
   - set PATH=%cd%\depot_tools;%PATH%
+  - set TARGET_ARCH="x64"
 
 build_script:
-  npm install 
+  - npm install 
+  - npx cmake-js configure --msvs_version=2019
+  - npx cmake-js build
