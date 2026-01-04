@@ -80,9 +80,9 @@ jobs:
           echo. > nix.gni
           # npx cmake-js configure --msvs_version=2017
           # 方案A: 如果你确定项目使用 cmake-js（可能需要强制指定目标）
-          npx cmake-js build --arch=x64 --CDCMAKE_SYSTEM_NAME=Windows
+          # npx cmake-js build --arch=x64 --CDCMAKE_SYSTEM_NAME=Windows
           # 方案B: 如果项目使用 node-gyp，则可能是：
-          npm run build 
+          npm run build  --msvs_version=2017
           # 方案C: 如果项目有自带的构建脚本：
           # npm run compile
 
