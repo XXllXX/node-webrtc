@@ -6,7 +6,9 @@ environment:
 
 install:
   # 1. 安装并指定 Python 3.9
-  - choco install python --version=3.9.0 -y
+  # - choco install python --version=3.9.0 -y
+  - python --version
+  - pip --version
   # 2. 克隆 depot_tools
   - git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
   - set PATH=%cd%\depot_tools;%PATH%
