@@ -1,0 +1,100 @@
+name: Build node-webrtc (Windows x64)
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: windows-latest  # 关键：使用 Windows 环境
+    env:
+      # 关键环境变量，解决 Visual Studio 检测和工具链问题
+      DEPOT_TOOLS_WIN_TOOLCHAIN: 0
+      GYP_MSVS_VERSION: 2019
+      # 可选：设置 Python 3.9 的路径，避免冲突
+      PYTHON: 'C:\hostedtoolcache\windows\Python\3.9.13\x64\python.exe'
+
+    steps:
+      # 1. 检出代码
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2. 设置 Python 环境（确保版本为 3.9，避免pipes模块问题）
+      - name: Setup Python 3.9
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.9'
+          architecture: 'x64'
+
+      # 3. 安装 Visual Studio 构建工具（MSVC）和 Windows SDK
+      - name: Setup MSVC Build Tools
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x64
+
+      # 4. 安装 Chocolatey 和基本工具（可选但推荐）
+      - name: Install dependencies via Chocolatey
+        run: |
+          choco install -y git
+          # 由于 Python 已由 actions/setup-python 管理，此处无需再安装，避免冲突
+
+      # 5. 设置 Node.js 环境
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20' # 根据项目要求调整
+          cache: 'npm'
+
+      # 6. 获取 depot_tools
+      - name: Setup depot_tools
+        run: |
+          # 仅当目录不存在时克隆，避免重复下载
+          if (!(Test-Path depot_tools)) {
+            git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
+          }
+          # 将路径添加到环境变量
+          echo "depot_tools" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+
+      # 7. 缓存关键目录（核心加速步骤）
+      - name: Cache WebRTC dependencies
+        uses: actions/cache@v4
+        id: cache-webrtc
+        with:
+          path: |
+            src
+            depot_tools
+            node_modules
+          key: ${{ runner.os }}-webrtc-${{ hashFiles('package-lock.json', 'package.json') }}
+
+      # 8. 同步依赖（仅在缓存未命中时执行）
+      - name: Sync dependencies (WebRTC & npm)
+        if: steps.cache-webrtc.outputs.cache-hit != 'true'
+        shell: cmd  # 在 Windows 上，depot_tools 的某些脚本在 cmd 下更可靠
+        run: |
+          call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+          mkdir src
+          cd src
+          fetch --nohooks webrtc
+          gclient sync
+          cd ..
+          npm ci
+
+      # 9. 执行构建（关键步骤，需要根据项目文档调整具体命令）
+      - name: Build with cmake-js / node-gyp
+        shell: cmd
+        run: |
+          call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+          # 方案A: 如果你确定项目使用 cmake-js（可能需要强制指定目标）
+          npx cmake-js build --arch=x64 --CDCMAKE_SYSTEM_NAME=Windows
+          # 方案B: 如果项目使用 node-gyp，则可能是：
+          # npm run build -- --arch=x64
+          # 方案C: 如果项目有自带的构建脚本：
+          # npm run compile
+
+      # 10. （可选）上传构建产物
+      - name: Upload artifacts
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-module
+          path: |
+            build/Release/*.node
+            **/*.log
