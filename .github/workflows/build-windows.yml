@@ -69,6 +69,8 @@ jobs:
         shell: cmd  # 在 Windows 上，depot_tools 的某些脚本在 cmd 下更可靠
         run: |
           npm install
+          set DEPOT_TOOLS_UPDATE=0
+          set TARGET_ARCH = "x64"
 
       # 9. 执行构建（关键步骤，需要根据项目文档调整具体命令）
       - name: Build with cmake-js / node-gyp
