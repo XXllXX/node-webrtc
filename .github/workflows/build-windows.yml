@@ -41,7 +41,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20' # 根据项目要求调整
-          cache: 'npm'
+          # cache: 'npm'
 
       # 6. 获取 depot_tools
       - name: Setup depot_tools
