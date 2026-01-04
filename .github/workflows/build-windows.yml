@@ -59,8 +59,7 @@ jobs:
         id: cache-webrtc
         with:
           path: |
-            src
-            depot_tools
+            build
             node_modules
           key: ${{ runner.os }}-webrtc-${{ hashFiles('package-lock.json', 'package.json') }}
 
@@ -69,13 +68,7 @@ jobs:
         if: steps.cache-webrtc.outputs.cache-hit != 'true'
         shell: cmd  # 在 Windows 上，depot_tools 的某些脚本在 cmd 下更可靠
         run: |
-          call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-          mkdir src
-          cd src
-          fetch --nohooks webrtc
-          gclient sync
-          cd ..
-          npm ci
+          npm install
 
       # 9. 执行构建（关键步骤，需要根据项目文档调整具体命令）
       - name: Build with cmake-js / node-gyp
