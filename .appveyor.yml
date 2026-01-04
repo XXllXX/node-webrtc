@@ -17,4 +17,4 @@ install:
 build_script:
   - npm install 
   - npx cmake-js configure --msvs_version=2019
-  - npx cmake-js build
+  - npx cmake-js build --CDCMAKE_SYSTEM_NAME=Windows
