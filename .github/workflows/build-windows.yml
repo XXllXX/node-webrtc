@@ -74,7 +74,8 @@ jobs:
       - name: Build with cmake-js / node-gyp
         shell: cmd
         run: |
-          call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+          echo. > nix.gni
+          npx cmake-js configure --msvs_version=2017
           # 方案A: 如果你确定项目使用 cmake-js（可能需要强制指定目标）
           npx cmake-js build --arch=x64 --CDCMAKE_SYSTEM_NAME=Windows
           # 方案B: 如果项目使用 node-gyp，则可能是：
