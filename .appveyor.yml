@@ -13,6 +13,7 @@ install:
   - git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
   - set PATH=%cd%\depot_tools;%PATH%
   - set TARGET_ARCH="x64"
+  - echo. > nix.gni
 
 build_script:
   - npm install 
