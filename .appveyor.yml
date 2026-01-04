@@ -15,7 +15,7 @@ install:
   # 2. 克隆 depot_tools
   #- git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
   #- set PATH=%cd%\depot_tools;%PATH%
-  # git config --global depot-tools.allowGlobalGitConfig true
+  - git config --global depot-tools.allowGlobalGitConfig true
   - set TARGET_ARCH="x64"
   - echo. > nix.gni
 
