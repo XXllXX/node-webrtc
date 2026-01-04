@@ -3,7 +3,10 @@ image: Visual Studio 2019
 environment:
   DEPOT_TOOLS_WIN_TOOLCHAIN: 0
   GYP_MSVS_VERSION: 2019
-
+cache:
+  # 缓存 node_modules 目录，这是 Node.js 项目最常用的缓存项[citation:3][citation:6]
+  - node_modules
+  - build
 install:
   # 1. 安装并指定 Python 3.9
   # - choco install python --version=3.9.0 -y
@@ -18,4 +21,4 @@ install:
 build_script:
   - npm install 
   - npx cmake-js configure --msvs_version=2019
-  - npx cmake-js build --CDCMAKE_SYSTEM_NAME=Windows
+  - npx cmake-js build 
