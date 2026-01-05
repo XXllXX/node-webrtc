@@ -30,6 +30,7 @@ jobs:
         uses: ilammy/msvc-dev-cmd@v1
         with:
           arch: x64
+          vs-version: '[15,16)'
 
       # 4. 安装 Chocolatey 和基本工具（可选但推荐）
       - name: Install dependencies via Chocolatey
