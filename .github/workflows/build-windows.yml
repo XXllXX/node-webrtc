@@ -95,5 +95,5 @@ jobs:
         with:
           name: windows-module
           path: |
-            build/Release/*.node
+            build
             **/*.log
