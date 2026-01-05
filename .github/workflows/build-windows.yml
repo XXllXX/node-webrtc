@@ -82,6 +82,7 @@ jobs:
           npx cmake-js configure --msvs_version=2022
           npx cmake-js build
           npm run build
+          dir build
 
       # 10. （可选）上传构建产物
       - name: Upload artifacts
