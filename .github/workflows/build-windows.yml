@@ -4,11 +4,11 @@ on: [push, pull_request]
 
 jobs:
   build:
-    runs-on: windows-2016  # 关键：使用 Windows 环境 
+    runs-on: windows-2022  # 关键：使用 Windows 环境 
     env:
       # 关键环境变量，解决 Visual Studio 检测和工具链问题
       DEPOT_TOOLS_WIN_TOOLCHAIN: 0
-      GYP_MSVS_VERSION: 2017
+      GYP_MSVS_VERSION: 2022
       TARGET_ARCH: '"x64"'
       # 可选：设置 Python 3.9 的路径，避免冲突
       PYTHON: 'C:\hostedtoolcache\windows\Python\3.9.13\x64\python.exe'
@@ -82,7 +82,7 @@ jobs:
           # 方案A: 如果你确定项目使用 cmake-js（可能需要强制指定目标）
           # npx cmake-js build --arch=x64 --CDCMAKE_SYSTEM_NAME=Windows
           # 方案B: 如果项目使用 node-gyp，则可能是：
-          npx cmake-js configure --msvs_version=2017
+          npx cmake-js configure --msvs_version=2022
           # 方案C: 如果项目有自带的构建脚本：
           npx cmake-js build
 
