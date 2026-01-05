@@ -75,8 +75,8 @@ jobs:
       - name: Build with cmake-js / node-gyp
         shell: cmd
         run: |
-          #set DEPOT_TOOLS_UPDATE=0
-          #set TARGET_ARCH = "x64"
+          # set DEPOT_TOOLS_UPDATE=0
+          # set TARGET_ARCH = "x64"
           echo. > nix.gni
           # npx cmake-js configure --msvs_version=2017
           # 方案A: 如果你确定项目使用 cmake-js（可能需要强制指定目标）
