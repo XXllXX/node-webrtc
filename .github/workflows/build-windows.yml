@@ -175,8 +175,38 @@ jobs:
         shell: cmd
         continue-on-error: true 
         run: |
-          set GN_ARGS=treat_warnings_as_errors=false
-          set GYP_DEFINES=treat_warnings_as_errors=false
+          npx cmake-js build 
+      - name: Patch the BUILD.gn file to silence warning
+        shell: cmd
+        run: |
+          echo 正在修补 BUILD.gn 文件...
+          set "FILE_PATH=build\external\libwebrtc\download\src\build\toolchain\win\BUILD.gn"
+          
+          if not exist "%FILE_PATH%" (
+            echo 错误: 找不到文件 %FILE_PATH%
+            exit 1
+          )
+          
+          rem 使用 powershell 进行更稳健的文本替换
+          powershell -Command "
+            $file = '%FILE_PATH%';
+            $content = Get-Content $file -Raw;
+            # 查找 'sys_lib_flags =' 的行，并在前面加上下划线，使其变成私有变量（抑制警告）
+            $newContent = $content -replace '(\s+)sys_lib_flags =', '${1}_sys_lib_flags =';
+            if ($content -eq $newContent) {
+              Write-Host '未找到需替换的内容，可能格式有变。'
+              exit 1
+            }
+            Set-Content $file -Value $newContent -NoNewline;
+            Write-Host '文件修补完成。'
+          "
+          
+          echo 修补后的文件相关行内容：
+          findstr /n "sys_lib_flags" "%FILE_PATH%"
+      - name: build
+        shell: cmd
+        continue-on-error: true 
+        run: |
           npx cmake-js build 
       # 9. 执行构建（关键步骤，需要根据项目文档调整具体命令）
       - name: build1
