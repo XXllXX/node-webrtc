@@ -9,7 +9,7 @@ jobs:
       # 关键环境变量，解决 Visual Studio 检测和工具链问题
       DEPOT_TOOLS_WIN_TOOLCHAIN: 0
       GYP_MSVS_VERSION: 2017
-      TARGET_ARCH: '"x64"'
+      TARGET_ARCH: '"x64"' 
       # 可选：设置 Python 3.9 的路径，避免冲突
       PYTHON: 'C:\hostedtoolcache\windows\Python\3.9.13\x64\python.exe'
 
@@ -36,7 +36,7 @@ jobs:
         shell: powershell
         run: |
           $installerPath = "$env:TEMP\vs_buildtools_2017.exe"
-          $downloadUrl = "https://aka.ms/vs/15/release/vs_buildtools.exe"
+          $downloadUrl = "https://aka.ms/vs/15/release/vs_enterprise.exe"
       
           Write-Host "Step 1: Downloading VS 2017 BuildTools from $downloadUrl ..."
           # 使用带重试机制和进度条的下载方式
@@ -109,6 +109,11 @@ jobs:
         uses: GuillaumeFalourd/setup-windows10-sdk-action@v2.4
         with:
           sdk-version: 19041
+      - name: Verify Installed Windows SDKs
+        shell: cmd
+        run: |
+          echo Listing installed Windows SDKs...
+          dir "C:\Program Files (x86)\Windows Kits\10\Include\" /AD /B
        # 4. 安装并配置 Ninja 构建系统
       - name: Install and Configure Ninja
         shell: cmd
@@ -157,17 +162,21 @@ jobs:
         run: |
           echo. > nix.gni
           npx node-gyp clean
-          npx cmake-js build
+          
      # 9. 执行构建（关键步骤，需要根据项目文档调整具体命令）
       - name: configure
         shell: cmd
         run: |
+          set GN_ARGS=treat_warnings_as_errors=false
+          set GYP_DEFINES=treat_warnings_as_errors=false
           npx cmake-js configure --msvs_version=2017
        # 9. 执行构建（关键步骤，需要根据项目文档调整具体命令）
       - name: build
         shell: cmd
         continue-on-error: true 
         run: |
+          set GN_ARGS=treat_warnings_as_errors=false
+          set GYP_DEFINES=treat_warnings_as_errors=false
           npx cmake-js build 
       # 9. 执行构建（关键步骤，需要根据项目文档调整具体命令）
       - name: build1
