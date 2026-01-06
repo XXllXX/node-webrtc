@@ -33,15 +33,10 @@ jobs:
           # vsversion: '[15,16)'
           # toolset: '15.0'
       - name: Install Windows 10 SDK (10.0.19041.0) via Chocolatey
-        shell: powershell
-        run: |
-          # 确认 Chocolatey 已安装（GitHub Actions windows 环境通常已预装）
-          choco --version
-          # 安装指定版本的 Windows SDK
-          choco install -y windows-sdk-10.0 --version=10.0.19041.0
-          # 刷新环境变量，使 SDK 工具（如 msbuild）立即可用
-          Import-Module "$env:ProgramFiles(x86)\Microsoft SDKs\Windows\v10.0A\Bin\Setenv.ps1"
-    
+        uses: GuillaumeFalourd/setup-windows10-sdk-action@v2.4
+        with:
+          sdk-version: 19041
+       
       # 4. 安装 Chocolatey 和基本工具（可选但推荐）
       - name: Install dependencies via Chocolatey
         run: |
