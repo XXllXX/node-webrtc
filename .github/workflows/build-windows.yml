@@ -44,6 +44,7 @@ jobs:
       - name: Check/Create CMake Toolchain File
         shell: cmd
         run: |
+          @echo off
           if exist toolchains\win32-x64.toolchain (
             echo "Toolchain file exists. Ensuring CMAKE_MAKE_PROGRAM is set..."
             REM  即使文件存在，我们也强行确保它包含正确的 Ninja 路径
