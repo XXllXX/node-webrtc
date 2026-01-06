@@ -100,7 +100,8 @@ jobs:
         id: cache-webrtc
         with:
           path: |
-            build-*/
+            build
+            build-win32-x64
             node_modules
           key: ${{ runner.os }}-webrtc-${{ hashFiles('package-lock.json', 'package.json') }}
 
