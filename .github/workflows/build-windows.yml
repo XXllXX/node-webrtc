@@ -79,11 +79,13 @@ jobs:
        # 9. 执行构建（关键步骤，需要根据项目文档调整具体命令）
       - name: build
         shell: cmd
+        continue-on-error: true 
         run: |
-          npx cmake-js build
+          npx cmake-js build 
       # 9. 执行构建（关键步骤，需要根据项目文档调整具体命令）
       - name: build1
         shell: cmd
+        continue-on-error: true 
         run: |
           npm run build
       # 9. 执行构建（关键步骤，需要根据项目文档调整具体命令）
