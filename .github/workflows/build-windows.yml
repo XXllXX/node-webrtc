@@ -26,12 +26,17 @@ jobs:
           architecture: 'x64'
 
       # 3. 安装 Visual Studio 构建工具（MSVC）和 Windows SDK
-      - name: Setup MSVC Build Tools
-        uses: ilammy/msvc-dev-cmd@v1
-        with:
-          arch: x64
+    #  - name: Setup MSVC Build Tools
+       # uses: ilammy/msvc-dev-cmd@v1
+        #with:
+         #arch: x64
           # vsversion: '[15,16)'
           # toolset: '15.0'
+      - name: Activate VS 2017 Build Tools
+        shell: cmd
+        run: |
+          REM 关键：调用 VS 2017 的配置脚本，将工具链加入当前PATH
+          call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" x64
       - name: Install Windows 10 SDK (10.0.19041.0) via Chocolatey
         uses: GuillaumeFalourd/setup-windows10-sdk-action@v2.4
         with:
