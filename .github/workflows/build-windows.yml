@@ -41,6 +41,26 @@ jobs:
         shell: cmd
         run: |
           choco install -y ninja
+      - name: Check/Create CMake Toolchain File
+        shell: cmd
+        run: |
+          if exist toolchains\win32-x64.toolchain (
+            echo "Toolchain file exists. Ensuring CMAKE_MAKE_PROGRAM is set..."
+            # 即使文件存在，我们也强行确保它包含正确的 Ninja 路径
+            echo set(CMAKE_MAKE_PROGRAM "C:\ProgramData\chocolatey\bin\ninja.exe") >> toolchains\win32-x64.toolchain
+          ) else (
+            echo "Creating win32-x64.toolchain file..."
+            mkdir toolchains
+            # 创建一个完整的、针对此环境的工具链文件
+            # 注意：编译器路径需要根据你使用的 Visual Studio 版本进行调整
+            echo set(CMAKE_SYSTEM_NAME Windows) > toolchains\win32-x64.toolchain
+            echo set(CMAKE_SYSTEM_PROCESSOR AMD64) >> toolchains\win32-x64.toolchain
+            echo set(CMAKE_C_COMPILER "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.39.33519\bin\Hostx64\x64\cl.exe") >> toolchains\win32-x64.toolchain
+            echo set(CMAKE_CXX_COMPILER "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.39.33519\bin\Hostx64\x64\cl.exe") >> toolchains\win32-x64.toolchain
+            # 这是关键行：设置 Ninja 的绝对路径
+            echo set(CMAKE_MAKE_PROGRAM "C:\ProgramData\chocolatey\bin\ninja.exe") >> toolchains\win32-x64.toolchain
+            echo set(CMAKE_BUILD_TYPE Release) >> toolchains\win32-x64.toolchain
+          )
           
       # 7. 缓存关键目录（核心加速步骤）
       - name: Cache WebRTC dependencies
