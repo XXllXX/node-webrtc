@@ -91,5 +91,5 @@ jobs:
         with:
           name: windows-module
           path: |
-            build/**/*
+            build-*/
             **/*.log
