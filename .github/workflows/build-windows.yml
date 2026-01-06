@@ -36,13 +36,19 @@ jobs:
         uses: GuillaumeFalourd/setup-windows10-sdk-action@v2.4
         with:
           sdk-version: 19041
+          
+      # 7. 缓存关键目录（核心加速步骤）
+      - name: Cache WebRTC dependencies
+        uses: actions/cache@v4
+        id: cache-webrtc
+        with:
+          path: |
+            build
+            build-win32-x64
+            node_modules
+          key: ${{ runner.os }}-webrtc-${{ hashFiles('package-lock.json', 'package.json') }}
        
-      # 4. 安装 Chocolatey 和基本工具（可选但推荐）
-      - name: Install dependencies via Chocolatey
-        run: |
-          choco install -y git
-          # 由于 Python 已由 actions/setup-python 管理，此处无需再安装，避免冲突
-
+     
       # 5. 设置 Node.js 环境
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -98,16 +104,6 @@ jobs:
         run: |
           dir D:\a\node-webrtc\node-webrtc
           
-      # 7. 缓存关键目录（核心加速步骤）
-      - name: Cache WebRTC dependencies
-        uses: actions/cache@v4
-        id: cache-webrtc
-        with:
-          path: |
-            build
-            build-win32-x64
-            node_modules
-          key: ${{ runner.os }}-webrtc-${{ hashFiles('package-lock.json', 'package.json') }}
 
       # 10. （可选）上传构建产物
       - name: Upload artifacts
