@@ -41,8 +41,6 @@ jobs:
         shell: cmd
         run: |
           choco install -y ninja
-          # 将 Ninja 添加到当前步骤的 PATH
-          echo "C:\ProgramData\chocolatey\lib\ninja\tools" >> $env:GITHUB_PATH
           
       # 7. 缓存关键目录（核心加速步骤）
       - name: Cache WebRTC dependencies
