@@ -32,11 +32,14 @@ jobs:
          #arch: x64
           # vsversion: '[15,16)'
           # toolset: '15.0'
-      - name: Activate VS 2017 Build Tools
+
+      - name: Find VS using vswhere (Fallback)
         shell: cmd
         run: |
-          REM 关键：调用 VS 2017 的配置脚本，将工具链加入当前PATH
-          call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" x64
+          REM 使用 vswhere 查找所有 MSVC 工具链
+          "C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe" -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath
+        continue-on-error: true
+     
       - name: Install Windows 10 SDK (10.0.19041.0) via Chocolatey
         uses: GuillaumeFalourd/setup-windows10-sdk-action@v2.4
         with:
