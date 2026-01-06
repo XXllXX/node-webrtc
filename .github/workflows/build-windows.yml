@@ -73,6 +73,10 @@ jobs:
           npx cmake-js configure --msvs_version=2022
           npx cmake-js build
           npm run build
+      # 9. 执行构建（关键步骤，需要根据项目文档调整具体命令）
+      - name: dir
+        shell: cmd
+        run: |
           dir D:\a\node-webrtc\node-webrtc
           
       # 7. 缓存关键目录（核心加速步骤）
