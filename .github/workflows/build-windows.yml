@@ -73,6 +73,7 @@ jobs:
           npx cmake-js configure --msvs_version=2022
           npx cmake-js build
           npm run build
+          dir D:\a\node-webrtc\node-webrtc
           
       # 7. 缓存关键目录（核心加速步骤）
       - name: Cache WebRTC dependencies
